@@ -18,7 +18,32 @@
             }
             .pac-container {
                 z-index: 10000 !important;
-                }
+            }
+            .success{
+                -moz-animation: success 1s ease-out;
+                -moz-animation-iteration-count: 1;
+
+                -webkit-animation: success 1s ease-out;
+                -webkit-animation-iteration-count: 1;
+
+                -ms-animation: success 1s ease-out;
+                -ms-animation-iteration-count: 1;
+            }
+            @-webkit-keyframes success {
+                0% { background-color:none;}
+                50% { background-color:green;}
+                100% {background-color:none;}
+            }
+            @-moz-keyframes success {
+                0% { background-color:none;}
+                50% { background-color:green;}
+                100% {background-color:none;}
+            }
+            @-ms-keyframes success {
+                0% { background-color:none;}
+                50% { background-color:green;}
+                100% {background-color:none;}
+            }
         </style>
     </head>
     <body>
@@ -182,8 +207,14 @@
             controlUI.addEventListener('click', function() {
 
                 var center = map.getCenter();
-                $.get(window.location.href + "next_loc", {lat: center.lat(), lon:center.lng()}, function() {
+                $.get(window.location.href + "next_loc", {lat: center.lat(), lon:center.lng()}, function(response) {
+                    if ('ok' == response) {
+                        $(controlText).addClass("success");
 
+                        setTimeout(function () {
+                            $(controlText).removeClass("success");
+                        }, 1000);	// Timeout must be the same length as the CSS3 transition or longer (or you'll mess up the transition)
+                    }
                 });
             });
 
