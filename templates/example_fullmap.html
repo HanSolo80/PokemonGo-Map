@@ -151,6 +151,44 @@
 
         }
 
+        function RefreshControl(controlDiv, map) {
+
+            // Set CSS for the control border.
+            var controlUI = document.createElement('div');
+            controlUI.style.backgroundColor = '#fff';
+            controlUI.style.border = '2px solid #fff';
+            controlUI.style.borderRadius = '3px';
+            controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+            controlUI.style.cursor = 'pointer';
+            controlUI.style.marginBottom = '22px';
+            controlUI.style.textAlign = 'center';
+            controlUI.title = 'Click to refresh the map';
+            controlDiv.appendChild(controlUI);
+
+            // Set CSS for the control interior.
+            var controlText = document.createElement('button');
+            controlText.style.cursor = 'pointer';
+            controlText.style.color = 'rgb(25,25,25)';
+            controlText.style.background = 'transparent';
+            controlText.style.border = '0 none';
+            controlText.style.fontSize = '18px';
+            controlText.style.lineHeight = '25px';
+            controlText.style.paddingLeft = '5px';
+            controlText.style.paddingRight = '5px';
+            controlText.innerHTML = '&#x21bb;';
+            controlUI.appendChild(controlText);
+
+            // Setup the click event listeners: simply set the map to Chicago.
+            controlUI.addEventListener('click', function() {
+
+                var center = map.getCenter();
+                $.get(window.location.href + "next_loc", {lat: center.lat(), lon:center.lng()}, function() {
+
+                });
+            });
+
+        }
+
 
         // Removes the markers from the map, but keeps them in the array.
         function clearMarkers() {
@@ -191,12 +229,6 @@
                             rotateControl: true,
                             fullscreenControl: true
                     });
-                    map.addListener('dragend', function() {
-                        var center = map.getCenter();
-                        $.get(window.location.href + "next_loc", {lat: center.lat(), lon:center.lng()}, function() {
-
-                        });
-                    });
 
                     // Create the DIV to hold the control and call the CenterControl() constructor
                     // passing in this DIV.
@@ -205,6 +237,14 @@
 
                     centerControlDiv.index = 1;
                     map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
+
+                    // Create the DIV to hold the control and call the RefreshControl() constructor
+                    // passing in this DIV.
+                    var refreshControlDiv = document.createElement('div');
+                    var refreshControl = new RefreshControl(refreshControlDiv, map);
+
+                    refreshControlDiv.index = 1;
+                    map.controls[google.maps.ControlPosition.TOP_CENTER].push(refreshControlDiv);
                 }
             }
         }
