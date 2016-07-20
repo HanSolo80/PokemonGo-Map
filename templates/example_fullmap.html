@@ -5,6 +5,21 @@
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <title>Flask Google Maps Full Map Example</title>
+        <style>
+            #pac-input {
+                background-color: #fff;
+
+                position: absolute;
+                z-index: 2000;
+            }
+
+            #pac-input:focus {
+                border-color: #4d90fe;
+            }
+            .pac-container {
+                z-index: 10000 !important;
+                }
+        </style>
     </head>
     <body>
         <h1>Flask Google Maps Full Map Example</h1>
@@ -135,6 +150,12 @@
                             streetViewControl: true,
                             rotateControl: true,
                             fullscreenControl: true
+                    });
+                    map.addListener('dragend', function() {
+                        var center = map.getCenter();
+                        $.get(window.location.href + "next_loc", {lat: center.lat(), lon:center.lng()}, function() {
+
+                        });
                     });
                 }
             }

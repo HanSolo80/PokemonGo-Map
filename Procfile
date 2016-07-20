@@ -1,0 +1,1 @@
+web: python example.py -u "$USERNAME" -p "$PASSWORD" -l "$LOCATION" -st 6 -ar 15 -L de --port $PORT --host 0.0.0.0
