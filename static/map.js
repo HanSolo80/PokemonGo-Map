@@ -7,120 +7,16 @@ function initMap() {
             lng: center_lng
         },
         zoom: 16,
-        styles: [{
-            "featureType": "all",
-            "elementType": "labels.text.fill",
-            "stylers": [{
-                "saturation": 36
-            }, {
-                "color": "#b39964"
-            }, {
-                "lightness": 40
-            }]
-        }, {
-            "featureType": "all",
-            "elementType": "labels.text.stroke",
-            "stylers": [{
-                "visibility": "on"
-            }, {
-                "color": "#000000"
-            }, {
-                "lightness": 16
-            }]
-        }, {
-            "featureType": "all",
-            "elementType": "labels.icon",
-            "stylers": [{
-                "visibility": "off"
-            }]
-        }, {
-            "featureType": "administrative",
-            "elementType": "geometry.fill",
-            "stylers": [{
-                "color": "#000000"
-            }, {
-                "lightness": 20
-            }]
-        }, {
-            "featureType": "administrative",
-            "elementType": "geometry.stroke",
-            "stylers": [{
-                "color": "#000000"
-            }, {
-                "lightness": 17
-            }, {
-                "weight": 1.2
-            }]
-        }, {
-            "featureType": "landscape",
-            "elementType": "geometry",
-            "stylers": [{
-                "color": "#000000"
-            }, {
-                "lightness": 20
-            }]
-        }, {
-            "featureType": "poi",
-            "elementType": "geometry",
-            "stylers": [{
-                "color": "#000000"
-            }, {
-                "lightness": 21
-            }]
-        }, {
-            "featureType": "road.highway",
-            "elementType": "geometry.fill",
-            "stylers": [{
-                "color": "#000000"
-            }, {
-                "lightness": 17
-            }]
-        }, {
-            "featureType": "road.highway",
-            "elementType": "geometry.stroke",
-            "stylers": [{
-                "color": "#000000"
-            }, {
-                "lightness": 29
-            }, {
-                "weight": 0.2
-            }]
-        }, {
-            "featureType": "road.arterial",
-            "elementType": "geometry",
-            "stylers": [{
-                "color": "#000000"
-            }, {
-                "lightness": 18
-            }]
-        }, {
-            "featureType": "road.local",
-            "elementType": "geometry",
-            "stylers": [{
-                "color": "#181818"
-            }, {
-                "lightness": 16
-            }]
-        }, {
-            "featureType": "transit",
-            "elementType": "geometry",
-            "stylers": [{
-                "color": "#000000"
-            }, {
-                "lightness": 19
-            }]
-        }, {
-            "featureType": "water",
-            "elementType": "geometry",
-            "stylers": [{
-                "lightness": 17
-            }, {
-                "color": "#525252"
-            }]
-        }]
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        zoomControl: true,
+        mapTypeControl: true,
+        scaleControl: true,
+        streetViewControl: false,
+        rotateControl: true,
+        fullscreenControl: true
     });
 
-    marker = new google.maps.Marker({
+    var marker = new google.maps.Marker({
         position: {
             lat: center_lat,
             lng: center_lng
@@ -129,12 +25,25 @@ function initMap() {
         animation: google.maps.Animation.DROP
     });
 
-};
+    // Create the DIV to hold the control and call the CenterControl() constructor
+    // passing in this DIV.
+    var centerControlDiv = document.createElement('div');
+    var centerControl = new CenterControl(centerControlDiv, map);
+    centerControlDiv.index = 1;
+    map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
+    // Create the DIV to hold the control and call the RefreshControl() constructor
+    // passing in this DIV.
+    var refreshControlDiv = document.createElement('div');
+    var refreshControl = new RefreshControl(refreshControlDiv, map);
+    refreshControlDiv.index = 1;
+    map.controls[google.maps.ControlPosition.TOP_CENTER].push(refreshControlDiv);
 
-
+}
 function pokemonLabel(name, disappear_time, id, disappear_time, latitude, longitude) {
-    disappear_date = new Date(disappear_time)
-    var pad = function (number) { return number <= 99 ? ("0" + number).slice(-2) : number; }
+    var disappear_date = new Date(disappear_time);
+    var pad = function (number) {
+        return number <= 99 ? ("0" + number).slice(-2) : number;
+    };
 
     var contentstring = `
         <div>
@@ -152,8 +61,7 @@ function pokemonLabel(name, disappear_time, id, disappear_time, latitude, longit
                     target='_blank' title='View in Maps'>Get directions</a>
         </div>`;
     return contentstring;
-};
-
+}
 function gymLabel(team_name, team_id, gym_points) {
     var gym_color = ["0, 0, 0, .4", "74, 138, 202, .6", "240, 68, 58, .6", "254, 217, 40, .6"];
     var str;
@@ -179,9 +87,9 @@ function gymLabel(team_name, team_id, gym_points) {
 }
 
 // Dicts
-map_pokemons = {} // Pokemon
-map_gyms = {} // Gyms
-map_pokestops = {} // Pokestops
+map_pokemons = {}; // Pokemon
+map_gyms = {}; // Gyms
+map_pokestops = {}; // Pokestops
 var gym_types = ["Uncontested", "Mystic", "Valor", "Instinct"];
 
 function setupPokemonMarker(item) {
@@ -200,8 +108,7 @@ function setupPokemonMarker(item) {
 
     addListeners(marker);
     return marker;
-};
-
+}
 function setupGymMarker(item) {
     var marker = new google.maps.Marker({
         position: {
@@ -218,8 +125,7 @@ function setupGymMarker(item) {
 
     addListeners(marker);
     return marker;
-};
-
+}
 function setupPokestopMarker(item) {
     var imagename = item.lure_expiration ? "PstopLured" : "Pstop";
     var marker = new google.maps.Marker({
@@ -237,42 +143,39 @@ function setupPokestopMarker(item) {
 
     addListeners(marker);
     return marker;
-};
-
+}
 function addListeners(marker) {
-    marker.addListener('click', function() {
+    marker.addListener('click', function () {
         marker.infoWindow.open(map, marker);
         updateLabelDiffTime();
         marker.persist = true;
     });
 
-    google.maps.event.addListener(marker.infoWindow, 'closeclick', function() {
+    google.maps.event.addListener(marker.infoWindow, 'closeclick', function () {
         marker.persist = null;
     });
 
-    marker.addListener('mouseover', function() {
+    marker.addListener('mouseover', function () {
         marker.infoWindow.open(map, marker);
         updateLabelDiffTime();
     });
 
-    marker.addListener('mouseout', function() {
+    marker.addListener('mouseout', function () {
         if (!marker.persist) {
             marker.infoWindow.close();
         }
     });
     return marker
-};
-
+}
 function clearStaleMarkers() {
-    $.each(map_pokemons, function(key, value) {
+    $.each(map_pokemons, function (key, value) {
 
         if (map_pokemons[key]['disappear_time'] < new Date().getTime()) {
             map_pokemons[key].marker.setMap(null);
             delete map_pokemons[key];
         }
     });
-};
-
+}
 function updateMap() {
     $.ajax({
         url: "raw_data",
@@ -283,9 +186,9 @@ function updateMap() {
             'gyms': document.getElementById('gyms-switch').checked
         },
         dataType: "json"
-    }).done(function(result) {
+    }).done(function (result) {
 
-        $.each(result.pokemons, function(i, item) {
+        $.each(result.pokemons, function (i, item) {
             if (!document.getElementById('pokemon-switch').checked) {
                 return false;
             } else { // add marker to map and item to dict
@@ -295,7 +198,7 @@ function updateMap() {
 
         });
 
-        $.each(result.pokestops, function(i, item) {
+        $.each(result.pokestops, function (i, item) {
             if (!document.getElementById('pokestops-switch').checked) {
                 return false;
             } else { // add marker to map and item to dict
@@ -307,7 +210,7 @@ function updateMap() {
 
         });
 
-        $.each(result.gyms, function(i, item) {
+        $.each(result.gyms, function (i, item) {
             if (!document.getElementById('gyms-switch').checked) {
                 return false;
             }
@@ -334,46 +237,120 @@ function updateMap() {
 
         clearStaleMarkers();
     });
-};
+}
+
+function CenterControl(controlDiv, map) {
+    // Set CSS for the control border.
+    var controlUI = document.createElement('div');
+    controlUI.style.backgroundColor = '#fff';
+    controlUI.style.border = '2px solid #fff';
+    controlUI.style.borderRadius = '3px';
+    controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+    controlUI.style.cursor = 'pointer';
+    controlUI.style.marginBottom = '22px';
+    controlUI.style.textAlign = 'center';
+    controlUI.title = 'Click to recenter the map to your position';
+    controlDiv.appendChild(controlUI);
+    // Set CSS for the control interior.
+    var controlText = document.createElement('button');
+    controlText.setAttribute('style', 'color: rgb(25,25,25) !important');
+    controlText.style.cursor = 'pointer';
+    controlText.style.background = 'transparent';
+    controlText.style.border = '0 none';
+    controlText.style.fontSize = '18px';
+    controlText.style.lineHeight = '25px';
+    controlText.style.paddingLeft = '5px';
+    controlText.style.paddingRight = '5px';
+    controlText.style.height = 'auto';
+    controlText.innerHTML = '&oplus;';
+    controlUI.appendChild(controlText);
+    // Setup the click event listeners: simply set the map to Chicago.
+    controlUI.addEventListener('click', function () {
+        if (navigator.geolocation) navigator.geolocation.getCurrentPosition(function (pos) {
+            var me = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
+            map.setCenter(me);
+        }, function (error) {
+            // ...
+        });
+    });
+}
+function RefreshControl(controlDiv, map) {
+    // Set CSS for the control border.
+    var controlUI = document.createElement('div');
+    controlUI.style.backgroundColor = '#fff';
+    controlUI.style.border = '2px solid #fff';
+    controlUI.style.borderRadius = '3px';
+    controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+    controlUI.style.cursor = 'pointer';
+    controlUI.style.marginBottom = '22px';
+    controlUI.style.textAlign = 'center';
+    controlUI.title = 'Click to refresh the map';
+    controlDiv.appendChild(controlUI);
+    // Set CSS for the control interior.
+    var controlText = document.createElement('button');
+    controlText.setAttribute('style', 'color: rgb(25,25,25) !important');
+    controlText.style.cursor = 'pointer';
+    controlText.style.background = 'transparent';
+    controlText.style.border = '0 none';
+    controlText.style.fontSize = '18px';
+    controlText.style.lineHeight = '25px';
+    controlText.style.paddingLeft = '5px';
+    controlText.style.paddingRight = '5px';
+    controlText.style.height = 'auto';
+    controlText.innerHTML = '&#x21bb;';
+    controlUI.appendChild(controlText);
+    // Setup the click event listeners: simply set the map to Chicago.
+    controlUI.addEventListener('click', function () {
+        var center = map.getCenter();
+        $.post('next_loc', {lat: center.lat(), lon: center.lng()}, function (response) {
+            if ('ok' == response) {
+                $(controlText).addClass("success");
+                setTimeout(function () {
+                    $(controlText).removeClass("success");
+                }, 1000);	// Timeout must be the same length as the CSS3 transition or longer (or you'll mess up the transition)
+            }
+        });
+    });
+}
 
 window.setInterval(updateMap, 5000);
 updateMap();
 
-document.getElementById('gyms-switch').onclick = function() {
+document.getElementById('gyms-switch').onclick = function () {
     if (this.checked) {
         updateMap();
     } else {
-        $.each(map_gyms, function(key, value) {
+        $.each(map_gyms, function (key, value) {
             map_gyms[key].marker.setMap(null);
         });
         map_gyms = {}
     }
 };
 
-$('#pokemon-switch').change(function() {
+$('#pokemon-switch').change(function () {
     if (this.checked) {
         updateMap();
     } else {
-        $.each(map_pokemons, function(key, value) {
+        $.each(map_pokemons, function (key, value) {
             map_pokemons[key].marker.setMap(null);
         });
         map_pokemons = {}
     }
 });
 
-$('#pokestops-switch').change(function() {
+$('#pokestops-switch').change(function () {
     if (this.checked) {
         updateMap();
     } else {
-        $.each(map_pokestops, function(key, value) {
+        $.each(map_pokestops, function (key, value) {
             map_pokestops[key].marker.setMap(null);
         });
         map_pokestops = {}
     }
 });
 
-var updateLabelDiffTime = function() {
-    $('.label-countdown').each(function(index, element) {
+var updateLabelDiffTime = function () {
+    $('.label-countdown').each(function (index, element) {
         var disappearsAt = new Date(parseInt(element.getAttribute("disappears-at")));
         var now = new Date();
 
@@ -382,6 +359,7 @@ var updateLabelDiffTime = function() {
         var minutes = Math.floor((difference - (hours * 36e5)) / 6e4);
         var seconds = Math.floor((difference - (hours * 36e5) - (minutes * 6e4)) / 1e3);
 
+        var timestring;
         if (disappearsAt < now) {
             timestring = "(expired)";
         } else {

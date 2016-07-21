@@ -70,6 +70,9 @@ def search(args):
 
     i = 1
     for step_location in generate_location_steps(position, num_steps):
+        if config['STOP_STEPPING']:
+            config['STOP_STEPPING'] = False
+            break
         log.info('Scanning step {:d} of {:d}.'.format(i, num_steps**2))
         log.debug('Scan location is {:f}, {:f}'.format(step_location[0], step_location[1]))
 

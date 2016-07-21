@@ -1997,10 +1997,43 @@ body {
 
 /* Main */
 #main {
-  height: 100%; }
+  height: 100%;
+  margin-top: 3.5em; }
 
 #map {
-  height: 100%; }
+  height: calc(100% - 3.5em); }
+
+.success {
+  -moz-animation: success 1s ease-out;
+  -moz-animation-iteration-count: 1;
+  -webkit-animation: success 1s ease-out;
+  -webkit-animation-iteration-count: 1;
+  -ms-animation: success 1s ease-out;
+  -ms-animation-iteration-count: 1; }
+
+@-webkit-keyframes success {
+  0% {
+    background-color: none; }
+  50% {
+    background-color: green; }
+  100% {
+    background-color: none; } }
+
+@-moz-keyframes success {
+  0% {
+    background-color: none; }
+  50% {
+    background-color: green; }
+  100% {
+    background-color: none; } }
+
+@-ms-keyframes success {
+  0% {
+    background-color: none; }
+  50% {
+    background-color: green; }
+  100% {
+    background-color: none; } }
 
 /* Footer */
 #footer {

@@ -1,0 +1,1 @@
+web: python runserver.py -u "$USERNAME" -p "$PASSWORD" -l "$LOCATION" -st $STEPS -L de -P $PORT -H 0.0.0.0 -k "$GMAPS_KEY"
