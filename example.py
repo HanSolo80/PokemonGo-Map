@@ -924,7 +924,7 @@ def get_pokemarkers():
 
 def get_map():
     fullmap = Map(
-        identifier="fullmap2",
+        identifier="fullmap",
         style='height:100%;width:100%;top:0;left:0;position:absolute;z-index:200;',
         lat=origin_lat,
         lng=origin_lon,
