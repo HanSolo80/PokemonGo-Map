@@ -323,7 +323,7 @@
                         }
                     }
                 } else {
-                    disappearsAt = {{ auto_refresh || 0 }} + 500;
+                    disappearsAt = {{ auto_refresh if auto_refresh else 0 }} + 500;
                 }
                 var marker = addMarker({
                         position: new google.maps.LatLng(item["lat"], item["lng"]),
